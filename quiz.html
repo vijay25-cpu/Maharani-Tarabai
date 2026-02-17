@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maharani Tarabai Quiz</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Roboto&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Roboto',sans-serif;
+  background:
+  linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),
+  url('bg.jpeg') no-repeat center/cover fixed;
+  color:white;
+}
+
+header{
+      text-align:center;
+      padding:25px;
+      background:rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      border-bottom:2px solid darkorange;
+    }
+    
+nav {
+      margin-top: 15px;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 18px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: darkorange;
+      text-shadow: 0 0 8px darkorange;
+    }
+
+h1{
+      font-family:'Cinzel', serif;
+      font-size:38px;
+      background:linear-gradient(to bottom,#ffb74d,darkorange);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:2px 4px 6px black;
+    }
+
+.quiz-container{
+  max-width:900px;
+  margin:50px auto;
+  padding:35px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+}
+
+#start-screen{text-align:center;}
+.start-btn{
+  padding:15px 40px;
+  font-size:20px;
+  background:linear-gradient(to right,#ff9800,#e65100);
+  border:none;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+#progress-bar{width:100%;height:10px;background:#333;border-radius:10px;margin-bottom:20px;}
+#progress{height:10px;width:0%;background:darkorange;border-radius:10px;}
+
+#timer{margin-bottom:15px;color:#ffcc80;}
+
+.question{font-size:1.3rem;margin-bottom:20px;color:wheat;}
+
+.options{display:flex;flex-direction:column;gap:12px;}
+
+.option-btn{
+  background:rgba(0,0,0,0.7);
+  color:#eee;
+  padding:14px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.option-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 10px darkorange;
+}
+
+#next-btn{
+  margin-top:20px;
+  padding:12px 30px;
+  background:darkorange;
+  border:none;
+  color:white;
+  border-radius:8px;
+  display:none;
+}
+
+/* CERTIFICATE DESIGN */
+#certificate{display:none;margin-top:40px;}
+
+#cert-box{
+  width:950px;
+  margin:auto;
+  padding:25px;
+  background:
+    linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85)),
+    url('bg.jpeg');
+  background-size:cover;
+  border-radius:20px;
+  color:wheat;
+  text-align:center;
+}
+
+.cert-border{
+  border:8px double gold;
+  padding:40px;
+  border-radius:15px;
+}
+
+.cert-title{
+  font-family:'Cinzel';
+  font-size:42px;
+  color:gold;
+}
+
+.cert-line{
+  width:250px;
+  height:3px;
+  background:gold;
+  margin:15px auto 25px;
+}
+
+.cert-name{
+  font-family:'Cinzel';
+  font-size:36px;
+  color:#ffcc80;
+  margin:15px 0;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 25px;
+  margin:15px 0;
+  font-weight:bold;
+  border-radius:20px;
+  background:linear-gradient(to right,gold,orange);
+  color:black;
+  font-size:18px;
+}
+
+
+
+@media print{
+  body{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  button{display:none;}
+}
+
+footer {
+      background: rgba(0,0,0,0.7);
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      color: whitesmoke;
+      border-top: 2px solid darkorange;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Maharani Tarabai History Quiz</h1>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="history.html">History</a>
+    <a href="quiz.html">Quiz</a>
+     <a href="about.html">About Us</a>
+  </nav>
+</header>
+
+<div class="quiz-container">
+
+<div id="start-screen">
+<h2>Test Your Knowledge</h2>
+<br>
+<button class="start-btn" onclick="startQuiz()">START QUIZ</button>
+</div>
+
+<div id="quiz-box" style="display:none;">
+<div id="progress-bar"><div id="progress"></div></div>
+<h3 id="timer">Time Left: 15s</h3>
+<h2 id="q-title"></h2>
+<div class="question" id="q-text"></div>
+<div class="options" id="options-box"></div>
+<button id="next-btn" onclick="nextQuestion()">Next</button>
+</div>
+
+<div id="result-container" style="display:none;text-align:center;">
+<h2>Quiz Completed</h2>
+<div id="final-score" style="font-size:35px;margin:15px;"></div>
+<h3 id="result-msg"></h3>
+</div>
+
+<div id="certificate">
+  <div id="cert-box">
+    <div class="cert-border">
+
+      <h1>Congratulations</h1>
+      <h2 class="cert-title">Certificate of Excellence</h2>
+      <div class="cert-line"></div>
+
+      <p>This certificate is proudly awarded to</p>
+      <h2 id="student-name" class="cert-name">Student Name</h2>
+
+      <p>For successfully completing the<br><br>
+      <b>Maharani Tarabai History Quiz</b></p><br>
+
+      <h3 id="cert-score">Score: 10/10</h3>
+      <p id="cert-date"></p>
+
+      <button onclick="downloadCertificate()">Download Certificate</button>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const quizData = [
+  { q:"Where was Tarabai born in 1675?", a:["Satara","Pune","Kolhapur","Raigad"], correct:0 },
+  { q:"Who was Tarabai's father?", a:["Hambirrao Mohite","Netaji Palkar","Santaji Ghorpade","Dhanaji Jadhav"], correct:0 },
+  { q:"Whom did Tarabai marry in 1682?", a:["Sambhaji Maharaj","Rajaram Bhosale","Shahu Maharaj","Shivaji Maharaj"], correct:1 },
+  { q:"What role did she take after Rajaram's death?", a:["Prime Minister","Senapati","Regent","Viceroy"], correct:2 },
+  { q:"Which Mughal Emperor did she resist?", a:["Akbar","Shah Jahan","Aurangzeb","Bahadur Shah"], correct:2 },
+  { q:"Which strategy did she use?", a:["Trench Warfare","Ganimi Kava","Phalanx","Siege"], correct:1 },
+  { q:"Which regions did she raid?", a:["Bengal","Malwa & Gujarat","Punjab","Kerala"], correct:1 },
+  { q:"Which throne did she establish?", a:["Nagpur","Gwalior","Baroda","Kolhapur"], correct:3 },
+  { q:"At what age did she pass away?", a:["55","65","85","95"], correct:2 },
+  { q:"She is remembered as the __ that put out Mughal fire.", a:["Rain","Fire","Shield","Lioness"], correct:1 }
+];
+
+let currentQ=0,score=0,time,timer;
+
+function startQuiz(){
+document.getElementById("start-screen").style.display="none";
+document.getElementById("quiz-box").style.display="block";
+loadQuestion();
+}
+
+function loadQuestion(){
+const q=quizData[currentQ];
+document.getElementById("q-title").innerText="Question "+(currentQ+1)+" of 10";
+document.getElementById("q-text").innerText=q.q;
+document.getElementById("progress").style.width=(currentQ/10*100)+"%";
+
+const box=document.getElementById("options-box");
+box.innerHTML="";
+document.getElementById("next-btn").style.display="none";
+
+q.a.forEach((opt,i)=>{
+const btn=document.createElement("button");
+btn.innerText=opt;
+btn.className="option-btn";
+btn.onclick=()=>selectAnswer(i,btn);
+box.appendChild(btn);
+});
+
+startTimer();
+}
+
+function startTimer(){
+time=15;
+document.getElementById("timer").innerText="Time Left: "+time+"s";
+clearInterval(timer);
+timer=setInterval(()=>{
+time--;
+document.getElementById("timer").innerText="Time Left: "+time+"s";
+if(time==0){clearInterval(timer);nextQuestion();}
+},1000);
+}
+
+function selectAnswer(i,btn){
+clearInterval(timer);
+const correct=quizData[currentQ].correct;
+const all=document.querySelectorAll(".option-btn");
+all.forEach(b=>b.disabled=true);
+
+if(i===correct){btn.style.background="green";score++;}
+else{btn.style.background="red";all[correct].style.background="green";}
+document.getElementById("next-btn").style.display="inline-block";
+}
+
+function nextQuestion(){
+currentQ++;
+if(currentQ<quizData.length) loadQuestion();
+else showResult();
+}
+
+function showResult(){
+document.getElementById("quiz-box").style.display="none";
+document.getElementById("result-container").style.display="block";
+document.getElementById("final-score").innerText=score+"/10";
+
+let rank;
+if(score>=9) rank="LEGEND";
+else if(score>=7) rank="WARRIOR";
+else rank="LEARNER";
+
+document.getElementById("result-msg").innerText=rank;
+confetti();
+
+let name=prompt("Enter your name:");
+if(!name) name="Student";
+
+document.getElementById("certificate").style.display="block";
+document.getElementById("student-name").innerText=name;
+document.getElementById("cert-score").innerText="Score: "+score+"/10";
+document.getElementById("rank-title").innerText=rank;
+document.getElementById("cert-date").innerText="Date: "+new Date().toLocaleDateString();
+}
+
+function downloadCertificate(){
+var printContents=document.getElementById("cert-box").outerHTML;
+var original=document.body.innerHTML;
+
+document.body.innerHTML=`
+<html>
+<head>
+<title>Certificate</title>
+<style>
+body{
+display:flex;justify-content:center;align-items:center;height:100vh;background:black;
+-webkit-print-color-adjust:exact;print-color-adjust:exact;font-family:'Cinzel';
+}
+</style>
+</head>
+<body>${printContents}</body>
+</html>`;
+
+window.print();
+document.body.innerHTML=original;
+location.reload();
+}
+</script>
+<footer>
+  <p>The Great Indian Queen | &copy; 2026</p>
+</footer>
+</body>
+</html>
